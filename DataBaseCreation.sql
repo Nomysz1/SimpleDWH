@@ -1,12 +1,15 @@
 DECLARE @DataBaseName nvarchar(48) = 'DWH'
-DECLARE @SQLCreationCode nvarchar(MAX) = 'CREATE DATABASE ' + @DataBaseName
+DECLARE @SQLCreationCode nvarchar(MAX) 
 
 IF DB_ID(@DataBaseName) IS NULL
 BEGIN
 	BEGIN TRY
+		SET @SQLCreationCode = 'CREATE DATABASE ' + @DataBaseName
 		exec sp_executesql @SQLCreationCode
 	END TRY
 	BEGIN CATCH
-		SELECT ERROR_MESSAGE()
+		PRINT ERROR_MESSAGE()
 	END CATCH
 END 
+ELSE
+	PRINT 'The database has already been created.'
