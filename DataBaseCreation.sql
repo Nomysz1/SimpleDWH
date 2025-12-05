@@ -1,11 +1,10 @@
-DECLARE @DataBaseName nvarchar(48) = 'DataWarehouse'
-DECLARE @SQLCreationCode nvarchar(MAX) 
+DECLARE @DBName as nvarchar(128) = 'DataWarehouse'
 
-IF DB_ID(@DataBaseName) IS NULL
+IF DB_ID(@DBName) IS NULL
 BEGIN
 	BEGIN TRY
-		SET @SQLCreationCode = 'CREATE DATABASE ' + @DataBaseName
-		exec sp_executesql @SQLCreationCode
+		DECLARE @SQLScript as nvarchar(64) = 'CREATE DATABASE ' + @DBName
+		EXEC sp_executesql @SQLScript
 	END TRY
 	BEGIN CATCH
 		PRINT ERROR_MESSAGE()
@@ -13,6 +12,6 @@ BEGIN
 END 
 ELSE
 BEGIN
-	DECLARE @CreationDate as datetime = (SELECT create_date FROM sys.databases WHERE database_id=DB_ID(@DataBaseName))
+	DECLARE @CreationDate as datetime = (SELECT create_date FROM sys.databases WHERE database_id=DB_ID(@DBName))
 	PRINT 'The database has already been created at:' + CAST(@CreationDate as varchar)
 END
